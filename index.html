@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK 3 · 模拟考试 Bài 10–18 | Thi thử HSK3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+:root{
+  --ink:#1c2230; --muted:#667085; --line:#e3e6ee; --bg:#f3f5f9; --card:#fff;
+  --navy:#17325f; --navy-2:#21457f; --red:#c8102e; --red-soft:#fdecee;
+  --ok:#13824f; --ok-soft:#e6f5ed; --bad:#c9302c; --bad-soft:#fbeaea;
+  --sel:#17325f; --sel-soft:#e8eef8; --amber:#b7791f; --radius:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Be Vietnam Pro','Noto Sans SC',system-ui,sans-serif;font-size:16px;line-height:1.6}
+.zh{font-family:'Noto Sans SC','Be Vietnam Pro',sans-serif}
+.muted{color:var(--muted)}
+
+/* ---------- Top bar ---------- */
+.sticky-top{position:sticky;top:0;z-index:50;background:var(--navy);color:#fff;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+.topbar{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:10px 16px}
+.brand{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.logo{background:var(--red);color:#fff;font-weight:800;padding:6px 10px;border-radius:8px;letter-spacing:1px;font-size:15px;white-space:nowrap;flex:none}
+.brand-zh{font-weight:700;font-family:'Noto Sans SC';font-size:16.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-vi{font-size:12.5px;opacity:.8}
+.cand{display:flex;align-items:center;gap:8px}
+.cand label{font-size:13px;opacity:.85;white-space:nowrap}
+.cand input{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;border-radius:8px;padding:8px 10px;font:inherit;font-size:14.5px;width:230px}
+.cand input::placeholder{color:rgba(255,255,255,.55)}
+.cand input:focus{outline:none;border-color:#fff;background:rgba(255,255,255,.16)}
+.cand input:disabled{opacity:.85}
+.btn{border:0;border-radius:8px;padding:9px 16px;font:inherit;font-weight:700;font-size:14.5px;cursor:pointer;white-space:nowrap}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{filter:brightness(1.08)}
+.btn-ghost{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.btn-ghost:hover{border-color:var(--navy)}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-navy:hover{background:var(--navy-2)}
+.btn:disabled{opacity:.6;cursor:wait}
+
+.tabs{max-width:1200px;margin:0 auto;display:flex;gap:4px;padding:0 16px}
+.tab{flex:1;background:transparent;border:0;color:rgba(255,255,255,.7);padding:10px 8px 12px;font:inherit;cursor:pointer;border-bottom:3px solid transparent;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.tab:hover{color:#fff}
+.tab.active{color:#fff;border-bottom-color:var(--red)}
+.tab-zh{font-family:'Noto Sans SC';font-weight:700}
+.tab-vi{font-weight:600}
+.tab-count{font-size:12px;background:rgba(255,255,255,.15);padding:1px 9px;border-radius:999px}
+
+/* ---------- Layout ---------- */
+main,#result-view{max-width:1200px;margin:0 auto;padding:20px 16px 60px}
+#exam-view[hidden],#result-view[hidden]{display:none}
+.pane{display:none}
+.pane.active{display:block}
+.pane-grid{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:20px;align-items:start}
+.navi{position:sticky;top:132px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
+.navi h4{margin:0 0 10px;font-size:13.5px;color:var(--muted);font-weight:600}
+.navi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.nv{border:1px solid var(--line);background:#fff;border-radius:6px;padding:5px 0;font:inherit;font-size:13px;cursor:pointer;color:var(--ink)}
+.nv:hover{border-color:var(--navy)}
+.nv.done{background:var(--sel);color:#fff;border-color:var(--sel)}
+.nv.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.nv.bad{background:var(--bad);color:#fff;border-color:var(--bad)}
+.nv.manual{background:var(--amber);color:#fff;border-color:var(--amber)}
+.navi-legend{margin-top:12px;font-size:12px;color:var(--muted);display:grid;gap:4px}
+.navi-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.sec-head .ico{width:46px;height:46px;border-radius:12px;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:22px;flex:none}
+.sec-head h2{margin:0;font-size:22px;line-height:1.25}
+.sec-head h2 .zh{color:var(--red);margin-right:8px}
+.sec-head p{margin:2px 0 0;color:var(--muted);font-size:14px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;margin-bottom:18px}
+.part-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-bottom:2px solid var(--navy);padding-bottom:8px;margin-bottom:12px}
+.part-zh{font-family:'Noto Sans SC';font-weight:800;font-size:19px;color:var(--navy)}
+.part-vi{font-weight:600;color:var(--muted);font-size:14.5px}
+.part-instr{font-size:14.5px;color:var(--muted);margin:0 0 14px}
+.group-title{font-family:'Noto Sans SC';font-weight:700;margin:18px 0 10px;font-size:16.5px}
+
+.audio{display:flex;align-items:center;gap:12px;background:var(--sel-soft);border-radius:10px;padding:10px 14px;margin-bottom:14px;flex-wrap:wrap}
+.audio span{font-weight:700;font-size:14px;color:var(--navy)}
+.audio audio{flex:1;min-width:240px;height:40px}
+
+.pics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.pic{margin:0;position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fafbfc;aspect-ratio:4/3}
+.pic img{width:100%;height:100%;object-fit:contain;display:block}
+.pic-l{position:absolute;top:6px;left:6px;background:var(--navy);color:#fff;font-weight:800;width:28px;height:28px;border-radius:6px;display:grid;place-items:center;font-size:15px;z-index:1}
+.pic.noimg::after,.wimg.noimg::after{content:'Chưa có ảnh';position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:13px}
+
+.example{display:flex;gap:12px;align-items:flex-start;background:#fbfaf3;border:1px dashed #d9cfa8;border-radius:10px;padding:12px 14px;margin:6px 0 16px;font-family:'Noto Sans SC'}
+.ex-tag{flex:none;background:#efe6c2;color:#7a5c00;font-weight:700;border-radius:6px;padding:1px 8px;font-size:13.5px;margin-top:2px}
+.ex-body{flex:1;min-width:0}
+.ex-ans{flex:none;font-weight:700}
+.boxed{display:inline-grid;place-items:center;min-width:30px;height:30px;border:2px solid var(--ink);border-radius:4px;font-weight:800;font-family:'Be Vietnam Pro'}
+
+.q{scroll-margin-top:140px;padding:12px 0;border-top:1px solid #eef0f5}
+.q-inline{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.q-head{display:flex;gap:10px;align-items:flex-start}
+.q-num{flex:none;min-width:34px;height:30px;border-radius:7px;background:var(--navy);color:#fff;font-weight:700;display:grid;place-items:center;font-size:14px}
+.q-text{font-family:'Noto Sans SC';font-size:17px;padding-top:2px;line-height:1.8}
+.opts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.q-inline .opts{margin-top:0}
+.q-block .opts{margin-left:44px}
+.opt{border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:8px;color:var(--ink);transition:background .12s,border-color .12s;min-height:38px}
+.opt:hover:not(:disabled){border-color:var(--navy)}
+.opt-l{font-weight:800;color:var(--navy)}
+.opt-t{font-family:'Noto Sans SC';font-size:16px}
+.opt.sel{background:var(--sel);border-color:var(--sel);color:#fff}
+.opt.sel .opt-l{color:#fff}
+.opt.used{opacity:.35;cursor:not-allowed;text-decoration:line-through}
+.locked .opt{cursor:default}
+.opt.is-key{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.opt.is-key .opt-l{color:var(--ok)}
+.opt.sel.is-key{background:var(--ok);color:#fff}
+.opt.sel.is-key .opt-l{color:#fff}
+.opt.is-wrong{background:var(--bad);border-color:var(--bad);color:#fff;opacity:1}
+.opt.is-wrong .opt-l{color:#fff}
+
+.optlist{display:grid;gap:6px;background:#f7f8fb;border-radius:10px;padding:12px 14px;margin-bottom:12px;font-family:'Noto Sans SC';font-size:16.5px}
+.optlist div{display:flex;gap:10px}
+.optlist b{color:var(--navy);min-width:16px;font-family:'Be Vietnam Pro'}
+.optlist .used{opacity:.45}
+.wordbank{display:flex;flex-wrap:wrap;gap:8px 22px;background:#f7f8fb;border-radius:10px;padding:12px 14px;margin-bottom:12px;font-family:'Noto Sans SC';font-size:17.5px}
+.wordbank b{color:var(--navy);margin-right:5px;font-family:'Be Vietnam Pro'}
+.wordbank .used{opacity:.45;text-decoration:line-through}
+.blank{display:inline-block;min-width:44px;text-align:center;border-bottom:2px solid var(--navy);margin:0 2px;color:var(--navy);font-weight:800;font-family:'Be Vietnam Pro'}
+.dlg{display:block}
+
+.passage{font-family:'Noto Sans SC';font-size:16.5px;line-height:1.9;background:#f7f8fb;border-left:4px solid var(--navy);border-radius:8px;padding:12px 16px;margin:14px 0 4px}
+.pnum{font-weight:800;color:var(--navy);margin-right:6px;font-family:'Be Vietnam Pro'}
+.passage + .q{border-top:0}
+
+.pyb{display:inline-flex;flex-direction:column;align-items:center;vertical-align:bottom;margin:0 4px}
+.py{font-size:14px;color:var(--red);line-height:1.2;font-family:'Be Vietnam Pro';font-weight:600}
+.hz{width:64px;height:46px;text-align:center;font-family:'Noto Sans SC';font-size:24px;border:2px solid #c9cedb;border-radius:8px;background:#fff;color:var(--ink)}
+.hz:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px var(--sel-soft)}
+.hz.ok{border-color:var(--ok);background:var(--ok-soft)}
+.hz.bad{border-color:var(--bad);background:var(--bad-soft)}
+.hz-static{display:inline-grid;place-items:center;width:64px;height:46px;border:2px solid #c9cedb;border-radius:8px;font-family:'Noto Sans SC';font-size:24px;font-weight:700}
+.hz-key{display:block;font-size:13px;color:var(--ok);font-weight:700;text-align:center;font-family:'Noto Sans SC'}
+
+.wrow{display:grid;grid-template-columns:260px 1fr;gap:18px;align-items:start}
+.wimg{aspect-ratio:4/3;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fafbfc;position:relative}
+.wimg img{width:100%;height:100%;object-fit:contain;display:block}
+.kw{display:inline-block;font-family:'Noto Sans SC';font-weight:700;font-size:20px;color:var(--red);background:var(--red-soft);border-radius:8px;padding:2px 12px;margin-bottom:8px}
+textarea.wt{width:100%;min-height:110px;resize:vertical;font-family:'Noto Sans SC';font-size:18px;border:2px solid #c9cedb;border-radius:10px;padding:10px 12px;color:var(--ink);background:#fff}
+textarea.wt:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px var(--sel-soft)}
+.ex-sentence{font-family:'Noto Sans SC';font-size:18px;border-bottom:2px solid var(--ink);padding:4px 2px}
+.sample{display:none;margin-top:8px;background:var(--ok-soft);color:var(--ok);border-radius:8px;padding:8px 12px;font-family:'Noto Sans SC';font-size:15.5px}
+.locked .sample{display:block}
+.manual-tag{display:none;margin-top:6px;font-size:13px;color:var(--amber);font-weight:700}
+.locked .manual-tag{display:block}
+
+.pane-foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:6px 0 24px}
+
+/* ---------- Modal ---------- */
+.modal{position:fixed;inset:0;background:rgba(15,22,40,.55);display:grid;place-items:center;z-index:100;padding:16px}
+.modal[hidden]{display:none}
+.modal-box{background:#fff;border-radius:14px;max-width:440px;width:100%;padding:22px 22px 18px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.modal-box h3{margin:0 0 8px;font-size:18px;color:var(--navy)}
+.modal-box p{margin:0 0 6px;color:#3a4252;font-size:15px}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}
+
+/* ---------- Result sheet ---------- */
+.result-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-bottom:14px}
+#result-sheet{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px 30px;color:#1c2230}
+.pdf-sheet{width:700px;background:#fff;color:#1c2230;padding:0;font-size:13px}
+.pdf-sheet .rs-scroll{overflow:visible}
+.pdf-sheet .rs-tbl{table-layout:fixed;width:100%;font-size:11.5px}
+.pdf-sheet .rs-tbl td,.pdf-sheet .rs-tbl th{word-break:break-word;overflow-wrap:anywhere;padding:5px 6px}
+.pdf-sheet .rs-cards{gap:8px}
+.pdf-sheet .rs-card .val{font-size:20px}
+.pdf-sheet .rs-thumb{width:84px;height:63px}
+.rs-head{text-align:center;border-bottom:3px double var(--navy);padding-bottom:12px;margin-bottom:14px}
+.rs-zh{font-family:'Noto Sans SC';font-weight:800;font-size:21px;color:var(--navy)}
+.rs-vi{font-weight:700;letter-spacing:1px;color:var(--red);margin-top:2px;font-size:15px}
+.rs-info{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px;text-align:left}
+.rs-info td{border:1px solid #d9dde7;padding:6px 10px}
+.rs-info td.k{background:#eef1f7;font-weight:600;width:18%}
+.rs-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0 4px}
+.rs-card{border:1px solid #d9dde7;border-radius:10px;padding:10px;text-align:center}
+.rs-card .lbl{font-size:12.5px;color:var(--muted);font-weight:600}
+.rs-card .val{font-size:24px;font-weight:800;color:var(--navy);line-height:1.3}
+.rs-card .val small{font-size:14px;color:var(--muted);font-weight:600}
+.rs-card .val.gv{font-size:15px;color:var(--amber);padding:6px 0}
+.rs-total{text-align:right;font-size:14px;margin-top:6px}
+.rs-sec{margin-top:20px}
+.rs-sec h3{font-size:15.5px;margin:0 0 8px;color:#fff;background:var(--navy);padding:6px 12px;border-radius:6px}
+.rs-scroll{overflow-x:auto}
+.rs-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.rs-tbl th{background:#eef1f7;text-align:left;padding:6px 8px;border:1px solid #d9dde7;font-weight:700}
+.rs-tbl td{padding:6px 8px;border:1px solid #d9dde7;vertical-align:top}
+.rs-tbl td.zh{font-family:'Noto Sans SC'}
+.rs-tbl tr{page-break-inside:avoid;break-inside:avoid}
+.rs-tbl tr.grp td{background:#f4f6fb;font-weight:700;color:var(--navy)}
+.rs-tbl tr.psg td{background:#fbfbfd;font-family:'Noto Sans SC';color:#3a4252;font-size:12.5px;line-height:1.7}
+.rs-tbl small{color:var(--muted)}
+.c-num{width:42px;text-align:center}
+.c-q{width:40%}.c-a{width:24%}.c-k{width:24%}
+.c-img{width:96px}.c-w{width:64px}
+.c-mk{width:42px;text-align:center}
+.mk-ok{color:var(--ok);font-weight:800;text-align:center}
+.mk-bad{color:var(--bad);font-weight:800;text-align:center}
+.rs-thumb{width:110px;height:82px;object-fit:contain;border:1px solid #e3e6ee;border-radius:6px;background:#fafbfc;display:block}
+.rs-gv{width:70px}
+.rs-note{font-size:12.5px;color:var(--muted);margin-top:8px}
+.rs-sign{margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:24px;font-size:14px;page-break-inside:avoid;break-inside:avoid}
+.rs-sign div{text-align:center}
+.rs-sign .line{margin-top:44px;border-top:1px dashed #999;padding-top:4px;color:var(--muted);font-size:12.5px}
+
+/* ---------- Responsive ---------- */
+@media (max-width:900px){
+  .pane-grid{grid-template-columns:1fr}
+  .navi{position:static;order:-1}
+  .navi-grid{grid-template-columns:repeat(10,1fr)}
+  .topbar{flex-wrap:wrap}
+  .cand{order:3;width:100%}
+  .cand input{flex:1;width:auto}
+  .wrow{grid-template-columns:1fr}
+  .pics{grid-template-columns:repeat(2,1fr)}
+  .q-block .opts{margin-left:0}
+  .card{padding:16px}
+  .tab{font-size:14px;padding:8px 4px 10px;gap:4px}
+  .tab-zh{display:none}
+  .q{scroll-margin-top:170px}
+}
+@media (max-width:700px){
+  .rs-cards{grid-template-columns:repeat(2,1fr)}
+  #result-sheet{padding:16px}
+  .brand-vi{display:none}
+}
+
+/* ---------- Print ---------- */
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff}
+  .sticky-top,#exam-view,.result-actions,.modal{display:none!important}
+  #result-view{padding:0;max-width:none;display:block!important}
+  #result-sheet{border:0;padding:0}
+  .rs-sec h3,.rs-tbl th,.rs-tbl tr.grp td,.rs-info td.k{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<div class="sticky-top">
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">HSK 3</span>
+      <div style="min-width:0">
+        <div class="brand-zh">中文水平考试 HSK（三级）模拟考试</div>
+        <div class="brand-vi">Đề thi thử · Nội dung Bài 10–18 · 70 câu</div>
+      </div>
+    </div>
+    <div class="cand">
+      <label for="cand-name">Thí sinh</label>
+      <input id="cand-name" type="text" placeholder="Nhập họ tên…" autocomplete="name">
+    </div>
+    <button id="btn-submit" class="btn btn-red" type="button">Nộp bài</button>
+  </header>
+  <nav class="tabs" id="tabs">
+    <button class="tab" data-tab="listening" type="button"><span class="tab-zh">一、听力</span><span class="tab-vi">Nghe</span><span class="tab-count" id="cnt-listening">0/30</span></button>
+    <button class="tab" data-tab="reading" type="button"><span class="tab-zh">二、阅读</span><span class="tab-vi">Đọc</span><span class="tab-count" id="cnt-reading">0/30</span></button>
+    <button class="tab" data-tab="writing" type="button"><span class="tab-zh">三、书写</span><span class="tab-vi">Viết</span><span class="tab-count" id="cnt-writing">0/10</span></button>
+  </nav>
+</div>
+
+<main id="exam-view">
+  <section class="pane" data-pane="listening"><div class="pane-grid"><div id="body-listening"></div><aside class="navi" id="navi-listening"></aside></div></section>
+  <section class="pane" data-pane="reading"><div class="pane-grid"><div id="body-reading"></div><aside class="navi" id="navi-reading"></aside></div></section>
+  <section class="pane" data-pane="writing"><div class="pane-grid"><div id="body-writing"></div><aside class="navi" id="navi-writing"></aside></div></section>
+</main>
+
+<section id="result-view" hidden>
+  <div class="result-actions">
+    <button class="btn btn-ghost" id="btn-review" type="button">← Xem lại bài làm</button>
+    <button class="btn btn-ghost" id="btn-print" type="button">In</button>
+    <button class="btn btn-navy" id="btn-pdf" type="button">Tải PDF</button>
+    <button class="btn btn-red" id="btn-new" type="button">Làm bài mới</button>
+  </div>
+  <div id="result-sheet"></div>
+</section>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true">
+    <h3 id="m-title"></h3>
+    <div id="m-body"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="m-cancel" type="button">Hủy</button>
+      <button class="btn btn-red" id="m-ok" type="button">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* =====================================================================
+   DỮ LIỆU ĐỀ THI
+   ===================================================================== */
+const AUDIO = {
+  p1: 'Nghe/Part1/audio/listening_1-10.MP3',
+  p2: 'Nghe/Part2/audio/listening_11-20.MP3',
+  p3: 'Nghe/Part2/audio/listening_21-30.MP3'
+};
+const IMG_L = 'Nghe/Part1/image/';
+
+/* ---- Nghe ---- */
+const L_KEY = {1:'F',2:'A',3:'E',4:'B',5:'C',6:'C',7:'A',8:'E',9:'D',10:'B',
+  11:'B',12:'A',13:'C',14:'B',15:'A',16:'C',17:'B',18:'A',19:'B',20:'C',
+  21:'A',22:'C',23:'B',24:'A',25:'C',26:'B',27:'A',28:'C',29:'B',30:'C'};
+const L_OPTS = {
+  11:{A:'每天读历史书',B:'上课认真听课',C:'看同学的笔记'},
+  12:{A:'参加比赛',B:'听音乐会',C:'问别人事情'},
+  13:{A:'给她一把雨伞',B:'让她早点儿回家',C:'告诉她已经下雨了'},
+  14:{A:'常骑车',B:'不会骑车',C:'想买自行车'},
+  15:{A:'用手机听书',B:'去书店买书',C:'去图书馆借书'},
+  16:{A:'鱼',B:'鸡肉',C:'鸡蛋面'},
+  17:{A:'不喜欢猫',B:'没时间照顾它们',C:'她在小猫咖啡馆工作'},
+  18:{A:'牙疼',B:'生气了',C:'对工作不满意'},
+  19:{A:'飞机上',B:'出租车上',C:'国家图书馆'},
+  20:{A:'她想休息',B:'她想工作日去',C:'今天天气不好'},
+  21:{A:'学习很认真',B:'不常写作业',C:'让妈妈检查作业'},
+  22:{A:'两天',B:'一周',C:'两个星期'},
+  23:{A:'离开公司',B:'参加会议',C:'跟朋友喝茶'},
+  24:{A:'酒',B:'花',C:'水果'},
+  25:{A:'在老师那儿',B:'在图书馆里',C:'被别人借走了'},
+  26:{A:'下大雨',B:'刮大风',C:'一直阴天'},
+  27:{A:'非常可爱',B:'吃得很少',C:'不喜欢爬树'},
+  28:{A:'早上上班时',B:'想锻炼身体时',C:'拿很多东西时'},
+  29:{A:'花茶',B:'绿茶',C:'红茶'},
+  30:{A:'看电影',B:'出去旅游',C:'在家里吃饭'}
+};
+
+/* ---- Đọc ---- */
+const R1A_OPTS = {
+  A:'当然可以，在学习上遇到什么问题都可以问我。',
+  B:'看来今天的会开不了了，咱们后天再说吧。',
+  C:'别担心，我车里有一把伞，可以借给你。',
+  D:'大概十个人，大家一边吃一边聊天儿。',
+  E:'我把它放进冰箱里了。',
+  F:'只要你每天坚持练习，就一定能提高。'
+};
+const R1A_EX = {q:'我买的矿泉水呢？', a:'E'};
+const R1A = [
+  {n:31, q:'经理刚刚打电话说，他的飞机晚点了。', a:'B'},
+  {n:32, q:'我的数学成绩一直很差，怎么办？', a:'F'},
+  {n:33, q:'这个题我看不明白，能问问你吗？', a:'A'},
+  {n:34, q:'外面突然刮起风来了，好像要下雨。', a:'C'},
+  {n:35, q:'昨天的联欢晚会来了多少人？', a:'D'}
+];
+const R1B_OPTS = {
+  A:'对我来说，跟家人一起生活最重要。',
+  B:'不是在你的书包里吗？',
+  C:'是啊，冬天比夏天少多了。',
+  D:'我把它借给同事了，他明天还给我。',
+  E:'那咱们先去看大熊猫，然后再去别的地方。'
+};
+const R1B = [
+  {n:36, q:'我的词典怎么不见了？', a:'B'},
+  {n:37, q:'你的笔记本电脑呢？我想用一下。', a:'D'},
+  {n:38, q:'你为什么不愿意去上海工作？', a:'A'},
+  {n:39, q:'今天动物园里的游客好像不多。', a:'C'},
+  {n:40, q:'孩子们最喜爱的动物是大熊猫。', a:'E'}
+];
+const R2A_WORDS = {A:'节目',B:'遍',C:'地点',D:'坚持',E:'鞋',F:'一般'};
+const R2A_EX = {lines:['你的__太脏了，快去洗一洗吧。'], a:'E'};
+const R2A = [
+  {n:41, lines:['这本书很有意思，我已经看了三__了。'], a:'B'},
+  {n:42, lines:['会议的__换了，换到第一会议室了。'], a:'C'},
+  {n:43, lines:['新年晚会上，大家最喜欢留学生们表演的__。'], a:'A'},
+  {n:44, lines:['学外语要__，每天学一点儿，不能今天学，明天不学。'], a:'D'},
+  {n:45, lines:['中国的学校__是小学六年，初中三年，高中三年。'], a:'F'}
+];
+const R2B_WORDS = {A:'或者',B:'被',C:'只要',D:'词典',E:'刚刚',F:'向'};
+const R2B_EX = {lines:['A：这个字我不认识。','B：你查一下__吧。'], a:'D'};
+const R2B = [
+  {n:46, lines:['A：明天我们怎么去公园？','B：坐地铁__坐公交车都可以。'], a:'A'},
+  {n:47, lines:['A：你的自行车呢？','B：昨天__我弟弟骑走了。'], a:'B'},
+  {n:48, lines:['A：这次考试我能考好吗？','B：__你认真复习，就一定能考好。'], a:'C'},
+  {n:49, lines:['A：小王在吗？','B：他__出去，你等一会儿吧。'], a:'E'},
+  {n:50, lines:['A：请问，图书馆怎么走？','B：一直__前走，到了路口往右走就是。'], a:'F'}
+];
+const R3_EX = {
+  passage:'我买了一个新手机，又好看又好用，就是有点儿贵。',
+  q:'关于新手机，可以知道什么？',
+  opts:{A:'不好看',B:'有点儿贵',C:'不好用'}, a:'B'
+};
+const R3 = [
+  {label:'51.', passage:'李老师说，我们写作业以前，最好先把笔记看一遍，这样写作业就容易多了。',
+   qs:[{n:51, q:'李老师让学生写作业前做什么？', opts:{A:'看笔记',B:'复习外语',C:'去办公室'}, a:'A'}]},
+  {label:'52.', passage:'动物园早上七点半开门。夏天晚上七点关门，冬天游客少，比夏天早关门一个小时。',
+   qs:[{n:52, q:'冬天动物园几点关门？', opts:{A:'7:30',B:'6:00',C:'8:00'}, a:'B'}]},
+  {label:'53.', passage:'小林来北京一年多了，别的都习惯了，就是天气还不太习惯。他觉得北京的冬天又冷，风又大。',
+   qs:[{n:53, q:'小林不习惯什么？', opts:{A:'北京的冬天',B:'北京的菜',C:'北京的工作'}, a:'A'}]},
+  {label:'54.', passage:'王经理今天请假了，会议只能换到后天开了。大家有什么问题，可以先发到公司的邮箱里。',
+   qs:[{n:54, q:'关于会议，可以知道什么？', opts:{A:'今天开',B:'后天开',C:'经理不参加'}, a:'B'}]},
+  {label:'55.', passage:'我认为，只有把每天学的生词都记住，才能真正提高中文水平。这个方法对我来说很有用。',
+   qs:[{n:55, q:'他认为怎样才能提高中文水平？', opts:{A:'多看电影',B:'去中国留学',C:'记住每天学的生词'}, a:'C'}]},
+  {label:'56.', passage:'我的新邻居是一对来自英国的夫妻。他们去过很多国家，家里有一张世界地图，上面的每一个红点都是他们去过的地方。',
+   qs:[{n:56, q:'关于邻居，可以知道什么？', opts:{A:'很喜欢旅游',B:'是中国人',C:'不会说中文'}, a:'A'}]},
+  {label:'57～58.', passage:'上个周末，我和同事一起去南京旅游。我们根据网上的介绍，先去了几个有名的景点，然后去河边吃饭。那天游客特别多，我们等了一个多小时才开始吃饭。饭馆的鱼做得很特别，跟北方菜的做法很不同。在我看来，旅游不一定要去很多地方，能吃到好吃的菜，跟朋友一边吃一边聊天儿，就已经很开心了。',
+   qs:[{n:57, q:'他们吃饭前做了什么？', opts:{A:'去了几个景点',B:'去河边游泳',C:'去朋友家做客'}, a:'A'},
+       {n:58, q:'在他看来，旅游时什么最开心？', opts:{A:'去很多景点',B:'买很多礼物',C:'一边吃好菜一边聊天儿'}, a:'C'}]},
+  {label:'59～60.', passage:'小雪上初中二年级了，后年就要考高中。她的数学一直不太好，以前上课不爱记笔记。从这个学期起，她把老师写在黑板上的题都记在本子上，每天写作业以前都要看一遍。只要遇到不明白的问题，她就去办公室问老师。现在，她的数学成绩提高了不少。',
+   qs:[{n:59, q:'从这个学期起，小雪开始做什么？', opts:{A:'每天去图书馆',B:'认真记笔记',C:'请同学帮忙'}, a:'B'},
+       {n:60, q:'这段话主要说小雪：', opts:{A:'不喜欢数学',B:'后年考大学',C:'学习方法变了，成绩提高了'}, a:'C'}]}
+];
+
+/* ---- Viết ---- */
+const W1_EX = {before:'老师讲得很清', py:'chǔ', a:'楚', after:'。'};
+const W1 = [
+  {n:61, before:'我把手机忘在办公', py:'shì', after:'了。', a:'室'},
+  {n:62, before:'这个季节天气', py:'biàn', after:'化很快。', a:'变'},
+  {n:63, before:'下周是我的生日，有时间的话来我家做', py:'kè', after:'吧。', a:'客'},
+  {n:64, before:'学校的网', py:'zhàn', after:'上有新年晚会的视频。', a:'站'},
+  {n:65, before:'大熊猫是中国的国', py:'bǎo', after:'。', a:'宝'}
+];
+const W2_EX = {img:'Viet/vd.webp', word:'开心', sample:'他开心得跳起来了。'};
+const W2 = [
+  {n:66, img:'Viet/66.webp', word:'伞',     sample:'下雨了，她把伞借给了同学。'},
+  {n:67, img:'Viet/67.webp', word:'大熊猫', sample:'大熊猫正在吃竹子，游客们都在拍照。'},
+  {n:68, img:'Viet/68.webp', word:'聊天儿', sample:'他们一边喝茶，一边聊天儿。'},
+  {n:69, img:'Viet/69.webp', word:'表演',   sample:'留学生们正在新年晚会上表演节目。'},
+  {n:70, img:'Viet/70.webp', word:'毕业',   sample:'他们今天毕业了，大家都很开心。'}
+];
+
+/* =====================================================================
+   CHỈ MỤC CÂU HỎI + ĐÁP ÁN
+   ===================================================================== */
+const SECS = {
+  listening:{from:1,  to:30, name:'Nghe', zh:'听力'},
+  reading:  {from:31, to:60, name:'Đọc',  zh:'阅读'},
+  writing:  {from:61, to:70, name:'Viết', zh:'书写'}
+};
+const KEY = Object.assign({}, L_KEY);
+R1A.forEach(x=>KEY[x.n]=x.a); R1B.forEach(x=>KEY[x.n]=x.a);
+R2A.forEach(x=>KEY[x.n]=x.a); R2B.forEach(x=>KEY[x.n]=x.a);
+R3.forEach(b=>b.qs.forEach(x=>KEY[x.n]=x.a));
+W1.forEach(x=>KEY[x.n]=x.a);
+const AUTO_TOTAL = Object.keys(KEY).length; // 65
+
+/* =====================================================================
+   TRẠNG THÁI (tự lưu trong trình duyệt)
+   ===================================================================== */
+const STORE = 'thihsk3_exam_b10_18_v1';
+let state = {name:'', answers:{}, submitted:false, submittedAt:null};
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem(STORE) || 'null');
+    if(s && typeof s === 'object'){ state = Object.assign(state, s); if(!state.answers) state.answers = {}; }
+  }catch(e){}
+}
+function save(){ try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){} }
+
+/* =====================================================================
+   TIỆN ÍCH
+   ===================================================================== */
+const $  = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc = s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ans = n=>String(state.answers[n]==null?'':state.answers[n]).trim();
+function grade(n){
+  if(KEY[n]==null) return 'manual';
+  const v = ans(n);
+  if(!v) return 'empty';
+  return v===KEY[n] ? 'ok' : 'bad';
+}
+function range(a,b){ const r=[]; for(let i=a;i<=b;i++) r.push(i); return r; }
+
+/* =====================================================================
+   DỰNG GIAO DIỆN ĐỀ
+   ===================================================================== */
+function secHead(icon, zh, vi, note){
+  return `<div class="sec-head"><div class="ico">${icon}</div><div><h2><span class="zh">${zh}</span>${vi}</h2><p>${note}</p></div></div>`;
+}
+function partHead(zh, vi, instr){
+  return `<div class="part-head"><span class="part-zh">${zh}</span><span class="part-vi">${vi}</span></div>`+
+         (instr?`<p class="part-instr">${instr}</p>`:'');
+}
+function audioBox(src, label){
+  return `<div class="audio"><span>🎧 ${label}</span><audio controls preload="none" src="${src}"></audio></div>`;
+}
+function picGrid(dir, letters){
+  return `<div class="pics">`+letters.map(L=>
+    `<figure class="pic"><span class="pic-l">${L}</span><img src="${IMG_L}${dir}/${L}.webp" alt="Tranh ${L}" loading="lazy" onerror="this.parentNode.classList.add('noimg');this.remove()"></figure>`
+  ).join('')+`</div>`;
+}
+function example(body, answer){
+  return `<div class="example"><span class="ex-tag">例如</span><div class="ex-body">${body}</div>${answer?`<div class="ex-ans">${answer}</div>`:''}</div>`;
+}
+function optBtns(n, letters, labels, disabled){
+  return `<div class="opts">`+letters.map(L=>{
+    const dis = disabled && disabled.includes(L);
+    return `<button type="button" class="opt${dis?' used':''}" data-q="${n}" data-v="${L}"${dis?' disabled title="Đã dùng cho ví dụ"':''}>`+
+           `<span class="opt-l">${L}</span>${labels&&labels[L]?`<span class="opt-t">${esc(labels[L])}</span>`:''}</button>`;
+  }).join('')+`</div>`;
+}
+function qInline(n, opts){ return `<div class="q q-inline" id="q-${n}"><span class="q-num">${n}</span>${opts}</div>`; }
+function qBlock(n, textHtml, opts){
+  return `<div class="q q-block" id="q-${n}"><div class="q-head"><span class="q-num">${n}</span><div class="q-text">${textHtml}</div></div>${opts}</div>`;
+}
+function blankHtml(n){ return `（<span class="blank" data-blank="${n}">&nbsp;</span>）`; }
+function linesHtml(lines, n, fixed){
+  return lines.map(l=>`<span class="dlg">${l.replace('__', fixed!=null ? `（<span class="blank">${fixed}</span>）` : blankHtml(n))}</span>`).join('');
+}
+function optList(opts, usedLetter){
+  return `<div class="optlist">`+Object.keys(opts).map(k=>`<div class="${k===usedLetter?'used':''}"><b>${k}</b><span>${esc(opts[k])}</span></div>`).join('')+`</div>`;
+}
+function wordBank(words, usedLetter){
+  return `<div class="wordbank">`+Object.keys(words).map(k=>`<span class="${k===usedLetter?'used':''}"><b>${k}</b>${esc(words[k])}</span>`).join('')+`</div>`;
+}
+function paneFoot(prev, next, isLast){
+  return `<div class="pane-foot"><div>${prev?`<button class="btn btn-ghost" data-go="${prev[0]}" type="button">← ${prev[1]}</button>`:''}</div>`+
+         `<div>${isLast?`<button class="btn btn-red" data-action="submit" type="button">Nộp bài</button>`:`<button class="btn btn-navy" data-go="${next[0]}" type="button">Tiếp theo: ${next[1]} →</button>`}</div></div>`;
+}
+
+function renderListening(){
+  let h = secHead('🎧','一、听力','Nghe hiểu','30 câu · khoảng 23 phút. Audio có thể nghe lại nhiều lần.');
+
+  // Part 1
+  let p = partHead('第一部分','Phần 1 · Câu 1–10','听对话，选择最匹配的图片。— Nghe hội thoại, chọn tranh phù hợp nhất.');
+  p += audioBox(AUDIO.p1, 'Audio câu 1–10');
+  p += `<div class="group-title">第 1～5 题</div>`;
+  p += picGrid('1-5', ['A','B','C','D','E','F']);
+  p += example('男：喂，请问张经理在吗？<br>女：他正在开会，您半个小时以后再打，好吗？', '<span class="boxed">D</span>');
+  range(1,5).forEach(n=>{ p += qInline(n, optBtns(n, ['A','B','C','D','E','F'], null, ['D'])); });
+  p += `<div class="group-title" style="margin-top:26px">第 6～10 题</div>`;
+  p += picGrid('6-10', ['A','B','C','D','E']);
+  range(6,10).forEach(n=>{ p += qInline(n, optBtns(n, ['A','B','C','D','E'])); });
+  h += `<div class="card">${p}</div>`;
+
+  // Part 2
+  p = partHead('第二部分','Phần 2 · Câu 11–20','听对话，选择正确答案。— Nghe hội thoại, chọn đáp án đúng.');
+  p += audioBox(AUDIO.p2, 'Audio câu 11–20');
+  p += example('女：我需要搬一些椅子到楼上办公室，你能来帮忙吗？<br>男：没问题，我再叫几个人来帮你。<br>问：他们要把椅子搬到哪儿？<br><b>A 教室　　B 办公室 ✓　　C 体育馆</b>');
+  range(11,20).forEach(n=>{ p += qInline(n, optBtns(n, ['A','B','C'], L_OPTS[n])); });
+  h += `<div class="card">${p}</div>`;
+
+  // Part 3
+  p = partHead('第三部分','Phần 3 · Câu 21–30','听一段话，选择正确答案。— Nghe đoạn văn hoặc hội thoại dài, chọn đáp án đúng.');
+  p += audioBox(AUDIO.p3, 'Audio câu 21–30');
+  p += example('那个年轻人刚来公司不久，很有工作热情，人也很聪明。<br>问：关于那个年轻人，可以知道什么？<br><b>A 很聪明 ✓　　B 是留学生　　C 爱踢足球</b>');
+  range(21,30).forEach(n=>{ p += qInline(n, optBtns(n, ['A','B','C'], L_OPTS[n])); });
+  h += `<div class="card">${p}</div>`;
+
+  h += paneFoot(null, ['reading','Đọc']);
+  $('#body-listening').innerHTML = h;
+}
+
+function renderReading(){
+  let h = secHead('📖','二、阅读','Đọc hiểu','30 câu · 30 phút.');
+
+  // Part 1
+  let p = partHead('第一部分','Phần 1 · Câu 31–40','匹配句子。— Chọn câu đối đáp phù hợp.');
+  p += `<div class="group-title">第 31～35 题</div>`;
+  p += optList(R1A_OPTS, 'E');
+  p += example(esc(R1A_EX.q), '<span class="boxed">E</span>');
+  R1A.forEach(x=>{ p += qBlock(x.n, esc(x.q), optBtns(x.n, ['A','B','C','D','E','F'], null, ['E'])); });
+  p += `<div class="group-title" style="margin-top:26px">第 36～40 题</div>`;
+  p += optList(R1B_OPTS);
+  R1B.forEach(x=>{ p += qBlock(x.n, esc(x.q), optBtns(x.n, ['A','B','C','D','E'])); });
+  h += `<div class="card">${p}</div>`;
+
+  // Part 2
+  p = partHead('第二部分','Phần 2 · Câu 41–50','选词填空。— Chọn từ thích hợp điền vào chỗ trống.');
+  p += `<div class="group-title">第 41～45 题</div>`;
+  p += wordBank(R2A_WORDS, 'E');
+  p += example(linesHtml(R2A_EX.lines, null, 'E'));
+  R2A.forEach(x=>{ p += qBlock(x.n, linesHtml(x.lines, x.n), optBtns(x.n, ['A','B','C','D','E','F'], R2A_WORDS, ['E'])); });
+  p += `<div class="group-title" style="margin-top:26px">第 46～50 题</div>`;
+  p += wordBank(R2B_WORDS, 'D');
+  p += example(linesHtml(R2B_EX.lines, null, 'D'));
+  R2B.forEach(x=>{ p += qBlock(x.n, linesHtml(x.lines, x.n), optBtns(x.n, ['A','B','C','D','E','F'], R2B_WORDS, ['D'])); });
+  h += `<div class="card">${p}</div>`;
+
+  // Part 3
+  p = partHead('第三部分','Phần 3 · Câu 51–60','请选出正确答案。— Đọc đoạn văn, chọn đáp án đúng.');
+  p += example(esc(R3_EX.passage)+`<br>★ ${esc(R3_EX.q)}<br><b>A 不好看　　B 有点儿贵 ✓　　C 不好用</b>`);
+  R3.forEach(b=>{
+    p += `<div class="passage"><span class="pnum">${b.label}</span>${esc(b.passage)}</div>`;
+    b.qs.forEach(x=>{ p += qBlock(x.n, '★ '+esc(x.q), optBtns(x.n, ['A','B','C'], x.opts)); });
+  });
+  h += `<div class="card">${p}</div>`;
+
+  h += paneFoot(['listening','Nghe'], ['writing','Viết']);
+  $('#body-reading').innerHTML = h;
+}
+
+function renderWriting(){
+  let h = secHead('✍️','三、书写','Viết','10 câu · 20 phút. Phần 2 (câu 66–70) do giáo viên chấm.');
+
+  // Part 1
+  let p = partHead('第一部分','Phần 1 · Câu 61–65','看拼音写汉字。— Viết chữ Hán theo pinyin.');
+  p += example(`<span class="q-text">${W1_EX.before}<span class="pyb"><span class="py">${W1_EX.py}</span><span class="hz-static">${W1_EX.a}</span></span>${W1_EX.after}</span>`);
+  W1.forEach(x=>{
+    const txt = `${esc(x.before)}<span class="pyb"><span class="py">${esc(x.py)}</span><input class="hz" data-q="${x.n}" maxlength="2" autocomplete="off" spellcheck="false" aria-label="Câu ${x.n}"></span>${esc(x.after)}`;
+    p += `<div class="q q-block" id="q-${x.n}"><div class="q-head"><span class="q-num">${x.n}</span><div class="q-text">${txt}</div></div></div>`;
+  });
+  h += `<div class="card">${p}</div>`;
+
+  // Part 2
+  p = partHead('第二部分','Phần 2 · Câu 66–70','看图，用词造句。— Nhìn tranh, dùng từ cho sẵn đặt một câu hoàn chỉnh.');
+  p += `<div class="example"><span class="ex-tag">例如</span><div class="ex-body"><div class="wrow">`+
+       `<div class="wimg"><img src="${W2_EX.img}" alt="Ví dụ" loading="lazy" onerror="this.parentNode.classList.add('noimg');this.remove()"></div>`+
+       `<div><div class="kw">${W2_EX.word}</div><div class="ex-sentence">他<b>开心</b>得跳起来了。</div></div></div></div></div>`;
+  W2.forEach(x=>{
+    p += `<div class="q" id="q-${x.n}"><div class="q-head" style="margin-bottom:10px"><span class="q-num">${x.n}</span></div><div class="wrow">`+
+         `<div class="wimg"><img src="${x.img}" alt="Tranh câu ${x.n}" loading="lazy" onerror="this.parentNode.classList.add('noimg');this.remove()"></div>`+
+         `<div><div class="kw">${esc(x.word)}</div>`+
+         `<textarea class="wt" data-q="${x.n}" placeholder="Viết một câu có dùng từ「${esc(x.word)}」…" spellcheck="false"></textarea>`+
+         `<div class="manual-tag">⏳ Giáo viên chấm</div>`+
+         `<div class="sample">Câu mẫu tham khảo: ${esc(x.sample)}</div></div></div></div>`;
+  });
+  h += `<div class="card">${p}</div>`;
+
+  h += paneFoot(['reading','Đọc'], null, true);
+  $('#body-writing').innerHTML = h;
+}
+
+function renderNavi(){
+  Object.keys(SECS).forEach(sec=>{
+    const s = SECS[sec];
+    const btns = range(s.from, s.to).map(n=>`<button type="button" class="nv" data-n="${n}">${n}</button>`).join('');
+    $('#navi-'+sec).innerHTML = `<h4>Danh sách câu · ${s.name}</h4><div class="navi-grid">${btns}</div><div class="navi-legend" data-legend></div>`;
+  });
+  renderLegend();
+}
+function renderLegend(){
+  const html = state.submitted
+    ? `<span><i style="background:var(--ok)"></i>Đúng</span><span><i style="background:var(--bad)"></i>Sai / bỏ trống</span><span><i style="background:var(--amber)"></i>Giáo viên chấm</span>`
+    : `<span><i style="background:var(--sel)"></i>Đã làm</span><span><i style="border:1px solid var(--line)"></i>Chưa làm</span>`;
+  $$('[data-legend]').forEach(el=>el.innerHTML = html);
+}
+
+/* =====================================================================
+   CẬP NHẬT TRẠNG THÁI TỪNG CÂU
+   ===================================================================== */
+function refreshQ(n){
+  const v = ans(n);
+  $$(`.opt[data-q="${n}"]`).forEach(b=>b.classList.toggle('sel', b.dataset.v===v));
+  const bl = $(`[data-blank="${n}"]`);
+  if(bl) bl.innerHTML = v ? esc(v) : '&nbsp;';
+  const nv = $(`.nv[data-n="${n}"]`);
+  if(nv && !state.submitted) nv.classList.toggle('done', !!v);
+}
+function updateCounts(){
+  Object.keys(SECS).forEach(sec=>{
+    const s = SECS[sec];
+    const done = range(s.from, s.to).filter(n=>ans(n)).length;
+    $('#cnt-'+sec).textContent = done+'/'+(s.to-s.from+1);
+  });
+}
+function setAnswer(n, v){
+  if(state.submitted) return;
+  state.answers[n] = v;
+  save(); refreshQ(n); updateCounts();
+}
+
+/* =====================================================================
+   ĐIỀU HƯỚNG
+   ===================================================================== */
+function showTab(tab){
+  $('#exam-view').hidden = false;
+  $('#result-view').hidden = true;
+  $$('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===tab));
+  $$('.pane').forEach(p=>p.classList.toggle('active', p.dataset.pane===tab));
+  try{ history.replaceState(null,'','#'+tab); }catch(e){}
+  window.scrollTo({top:0, behavior:'auto'});
+}
+function showResult(){
+  buildResult();
+  $('#exam-view').hidden = true;
+  $('#result-view').hidden = false;
+  $$('.tab').forEach(t=>t.classList.remove('active'));
+  try{ history.replaceState(null,'','#ketqua'); }catch(e){}
+  window.scrollTo({top:0, behavior:'auto'});
+}
+function secOf(n){ return Object.keys(SECS).find(k=>n>=SECS[k].from && n<=SECS[k].to); }
+
+/* =====================================================================
+   HỘP THOẠI
+   ===================================================================== */
+function modal(title, bodyHtml, okText, cancelText){
+  return new Promise(resolve=>{
+    $('#m-title').textContent = title;
+    $('#m-body').innerHTML = bodyHtml;
+    $('#m-ok').textContent = okText || 'OK';
+    const cancel = $('#m-cancel');
+    cancel.hidden = cancelText === null;
+    cancel.textContent = cancelText || 'Hủy';
+    $('#modal').hidden = false;
+    const done = v=>{ $('#modal').hidden = true; $('#m-ok').onclick = null; cancel.onclick = null; resolve(v); };
+    $('#m-ok').onclick = ()=>done(true);
+    cancel.onclick = ()=>done(false);
+  });
+}
+
+/* =====================================================================
+   NỘP BÀI + KHÓA BÀI
+   ===================================================================== */
+async function submit(){
+  if(state.submitted){ showResult(); return; }
+  const name = $('#cand-name').value.trim();
+  if(!name){
+    await modal('Chưa có họ tên', '<p>Vui lòng nhập họ tên thí sinh ở thanh trên cùng trước khi nộp bài.</p>', 'Đã hiểu', null);
+    $('#cand-name').focus();
+    return;
+  }
+  const missing = {};
+  Object.keys(SECS).forEach(sec=>{
+    const s = SECS[sec];
+    missing[sec] = range(s.from, s.to).filter(n=>!ans(n));
+  });
+  const totalMissing = missing.listening.length + missing.reading.length + missing.writing.length;
+  let body = '<p>Sau khi nộp, bài làm sẽ bị khóa và không sửa được nữa.</p>';
+  if(totalMissing){
+    body += `<p style="color:var(--bad);font-weight:600">Còn ${totalMissing} câu chưa làm:</p><p style="font-size:14px">`+
+      Object.keys(SECS).filter(s=>missing[s].length).map(s=>`<b>${SECS[s].name}:</b> ${missing[s].join(', ')}`).join('<br>')+'</p>';
+  }else{
+    body += '<p style="color:var(--ok);font-weight:600">Đã làm đủ 70 câu.</p>';
+  }
+  const ok = await modal('Nộp bài?', body, 'Nộp bài', 'Làm tiếp');
+  if(!ok) return;
+  state.name = name;
+  state.submitted = true;
+  state.submittedAt = new Date().toISOString();
+  save();
+  applyLock();
+  showResult();
+}
+
+function applyLock(){
+  document.body.classList.add('locked');
+  $('#cand-name').disabled = true;
+  $('#btn-submit').textContent = 'Xem kết quả';
+  $$('.opt').forEach(b=>{
+    b.disabled = true;
+    const n = +b.dataset.q, v = b.dataset.v;
+    if(KEY[n]==null) return;
+    if(v===KEY[n]) b.classList.add('is-key');
+    else if(v===ans(n)) b.classList.add('is-wrong');
+  });
+  $$('input.hz').forEach(inp=>{
+    const n = +inp.dataset.q;
+    inp.disabled = true;
+    const g = grade(n);
+    inp.classList.add(g==='ok' ? 'ok' : 'bad');
+    if(g!=='ok' && !inp.parentNode.querySelector('.hz-key')){
+      inp.insertAdjacentHTML('afterend', `<span class="hz-key">✓ ${KEY[n]}</span>`);
+    }
+  });
+  $$('textarea.wt').forEach(t=>t.disabled = true);
+  $$('.nv').forEach(nv=>{
+    const g = grade(+nv.dataset.n);
+    nv.classList.remove('done');
+    nv.classList.add(g==='ok' ? 'ok' : g==='manual' ? 'manual' : 'bad');
+  });
+  renderLegend();
+}
+
+/* =====================================================================
+   PHIẾU KẾT QUẢ
+   ===================================================================== */
+function stat(sec, onlyKeyed){
+  const s = SECS[sec];
+  const ns = range(s.from, s.to).filter(n=>!onlyKeyed || KEY[n]!=null);
+  return {ok: ns.filter(n=>grade(n)==='ok').length, total: ns.length};
+}
+const optLine = opts=>Object.keys(opts).map(k=>`${k} ${esc(opts[k])}`).join('　');
+function optStr(opts, v){
+  if(!v) return '<span class="muted">(bỏ trống)</span>';
+  return `<b>${esc(v)}</b>${opts && opts[v] ? ' · '+esc(opts[v]) : ''}`;
+}
+function mk(n){ return grade(n)==='ok' ? '<td class="mk-ok">✓</td>' : '<td class="mk-bad">✗</td>'; }
+function row(n, content, student, key){
+  return `<tr><td class="c-num">${n}</td><td class="zh">${content}</td><td class="zh">${student}</td><td class="zh">${key}</td>${mk(n)}</tr>`;
+}
+const TH = '<tr><th class="c-num">Câu</th><th class="c-q">Câu hỏi</th><th class="c-a">Bài làm</th><th class="c-k">Đáp án</th><th class="c-mk">KQ</th></tr>';
+const grp = t=>`<tr class="grp"><td colspan="5">${t}</td></tr>`;
+const fillLines = lines=>lines.map(l=>esc(l).replace('__','（　　）')).join('<br>');
+
+function buildResult(){
+  const L = stat('listening'), R = stat('reading'), W = stat('writing', true);
+  const totalOk = L.ok + R.ok + W.ok;
+  let when = '';
+  try{ when = new Date(state.submittedAt).toLocaleString('vi-VN'); }catch(e){ when = state.submittedAt || ''; }
+
+  let h = `<div class="rs-head">
+      <div class="rs-zh">中文水平考试 HSK（三级）· 模拟考试</div>
+      <div class="rs-vi">PHIẾU KẾT QUẢ BÀI THI THỬ · BÀI 10–18</div>
+      <table class="rs-info"><tr>
+        <td class="k">Thí sinh</td><td><b>${esc(state.name)}</b></td>
+        <td class="k">Thời gian nộp</td><td>${esc(when)}</td>
+      </tr></table>
+    </div>
+    <div class="rs-cards">
+      <div class="rs-card"><div class="lbl">听力 · Nghe</div><div class="val">${L.ok}<small> / ${L.total}</small></div></div>
+      <div class="rs-card"><div class="lbl">阅读 · Đọc</div><div class="val">${R.ok}<small> / ${R.total}</small></div></div>
+      <div class="rs-card"><div class="lbl">书写 · Viết phần 1</div><div class="val">${W.ok}<small> / ${W.total}</small></div></div>
+      <div class="rs-card"><div class="lbl">书写 · Viết phần 2</div><div class="val gv">Giáo viên chấm</div></div>
+    </div>
+    <div class="rs-total">Tổng số câu đúng (phần tự chấm): <b>${totalOk} / ${AUTO_TOTAL}</b></div>`;
+
+  // Nghe
+  let t = TH + grp('第一部分 · Câu 1–10 · Nghe hội thoại, chọn tranh');
+  range(1,10).forEach(n=>{ t += row(n, n<=5 ? 'Chọn tranh A–F (第1～5题)' : 'Chọn tranh A–E (第6～10题)', optStr(null, ans(n)), `<b>${KEY[n]}</b>`); });
+  t += grp('第二部分 · Câu 11–20 · Nghe hội thoại, chọn đáp án');
+  range(11,20).forEach(n=>{ t += row(n, optLine(L_OPTS[n]), optStr(L_OPTS[n], ans(n)), optStr(L_OPTS[n], KEY[n])); });
+  t += grp('第三部分 · Câu 21–30 · Nghe đoạn văn, chọn đáp án');
+  range(21,30).forEach(n=>{ t += row(n, optLine(L_OPTS[n]), optStr(L_OPTS[n], ans(n)), optStr(L_OPTS[n], KEY[n])); });
+  h += `<div class="rs-sec"><h3>一、听力 · Nghe hiểu (${L.ok}/${L.total})</h3><div class="rs-scroll"><table class="rs-tbl">${t}</table></div></div>`;
+
+  // Đọc
+  t = TH + grp('第一部分 · Câu 31–35 · Ghép câu (A–F)');
+  R1A.forEach(x=>{ t += row(x.n, esc(x.q), optStr(R1A_OPTS, ans(x.n)), optStr(R1A_OPTS, x.a)); });
+  t += grp('Câu 36–40 · Ghép câu (A–E)');
+  R1B.forEach(x=>{ t += row(x.n, esc(x.q), optStr(R1B_OPTS, ans(x.n)), optStr(R1B_OPTS, x.a)); });
+  t += grp('第二部分 · Câu 41–45 · Chọn từ: '+optLine(R2A_WORDS));
+  R2A.forEach(x=>{ t += row(x.n, fillLines(x.lines), optStr(R2A_WORDS, ans(x.n)), optStr(R2A_WORDS, x.a)); });
+  t += grp('Câu 46–50 · Chọn từ: '+optLine(R2B_WORDS));
+  R2B.forEach(x=>{ t += row(x.n, fillLines(x.lines), optStr(R2B_WORDS, ans(x.n)), optStr(R2B_WORDS, x.a)); });
+  t += grp('第三部分 · Câu 51–60 · Đọc hiểu đoạn văn');
+  R3.forEach(b=>{
+    t += `<tr class="psg"><td colspan="5"><b>${b.label}</b> ${esc(b.passage)}</td></tr>`;
+    b.qs.forEach(x=>{ t += row(x.n, `★ ${esc(x.q)}<br><small>${optLine(x.opts)}</small>`, optStr(x.opts, ans(x.n)), optStr(x.opts, x.a)); });
+  });
+  h += `<div class="rs-sec"><h3>二、阅读 · Đọc hiểu (${R.ok}/${R.total})</h3><div class="rs-scroll"><table class="rs-tbl">${t}</table></div></div>`;
+
+  // Viết phần 1
+  t = TH + grp('第一部分 · Câu 61–65 · Viết chữ Hán theo pinyin');
+  W1.forEach(x=>{
+    const v = ans(x.n);
+    t += row(x.n, `${esc(x.before)}（${esc(x.py)}）${esc(x.after)}`, v ? `<b>${esc(v)}</b>` : '<span class="muted">(bỏ trống)</span>', `<b>${x.a}</b>`);
+  });
+  h += `<div class="rs-sec"><h3>三、书写 · Viết — Phần 1 (${W.ok}/${W.total})</h3><div class="rs-scroll"><table class="rs-tbl">${t}</table></div></div>`;
+
+  // Viết phần 2
+  t = `<tr><th class="c-num">Câu</th><th class="c-img">Tranh</th><th class="c-w">Từ</th><th>Bài làm của thí sinh</th><th>Câu mẫu (tham khảo)</th><th class="rs-gv">Điểm GV</th></tr>`;
+  W2.forEach(x=>{
+    const v = ans(x.n);
+    t += `<tr><td class="c-num">${x.n}</td><td><img class="rs-thumb" src="${x.img}" alt="" onerror="this.style.visibility='hidden'"></td>`+
+         `<td class="zh"><b>${esc(x.word)}</b></td>`+
+         `<td class="zh">${v ? esc(v) : '<span class="muted">(bỏ trống)</span>'}</td>`+
+         `<td class="zh"><small>${esc(x.sample)}</small></td><td></td></tr>`;
+  });
+  h += `<div class="rs-sec"><h3>三、书写 · Viết — Phần 2 (giáo viên chấm)</h3><div class="rs-scroll"><table class="rs-tbl">${t}</table></div>
+        <p class="rs-note">Phần 2 có nhiều cách viết đúng. Câu mẫu chỉ để giáo viên tham khảo khi chấm.</p></div>`;
+
+  h += `<div class="rs-sign"><div>Thí sinh<div class="line">${esc(state.name)}</div></div><div>Giáo viên chấm phần Viết<div class="line">Ký và ghi rõ họ tên</div></div></div>`;
+
+  $('#result-sheet').innerHTML = h;
+}
+
+function fileSafe(s){
+  return String(s||'thi-sinh').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D')
+    .replace(/[^A-Za-z0-9]+/g,'_').replace(/^_+|_+$/g,'') || 'thi_sinh';
+}
+async function downloadPDF(){
+  const el = $('#result-sheet');
+  if(typeof window.html2pdf !== 'function'){ window.print(); return; }
+  const btn = $('#btn-pdf');
+  btn.disabled = true; btn.textContent = 'Đang tạo PDF…';
+  try{
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    /* Dựng bản sao rộng cố định 700px (vừa khổ A4 trừ lề) để PDF không bị cắt chữ ở mép phải */
+    const sheet = document.createElement('div');
+    sheet.className = 'pdf-sheet';
+    sheet.innerHTML = el.innerHTML;
+    await window.html2pdf().set({
+      margin:[10,8,12,8],
+      filename:`KetQua_HSK3_Bai10-18_${fileSafe(state.name)}.pdf`,
+      image:{type:'jpeg', quality:0.95},
+      html2canvas:{scale:2, useCORS:true, backgroundColor:'#ffffff', scrollX:0, scrollY:0, windowWidth:1100},
+      jsPDF:{unit:'mm', format:'a4', orientation:'portrait'},
+      pagebreak:{mode:['css','legacy'], avoid:['tr','.rs-cards','.rs-sign','.rs-head']}
+    }).from(sheet).save();
+  }catch(e){
+    await modal('Không tạo được PDF', '<p>Trình duyệt chưa tạo được file PDF. Hãy bấm nút <b>In</b> rồi chọn “Lưu dưới dạng PDF”.</p>', 'Đã hiểu', null);
+  }finally{
+    btn.disabled = false; btn.textContent = 'Tải PDF';
+  }
+}
+
+async function newExam(){
+  const ok = await modal('Làm bài mới?', '<p>Toàn bộ bài làm và kết quả hiện tại trên máy này sẽ bị xóa. Hãy tải PDF kết quả trước nếu cần lưu lại.</p>', 'Xóa và làm lại', 'Hủy');
+  if(!ok) return;
+  try{ localStorage.removeItem(STORE); }catch(e){}
+  location.hash = 'listening';
+  location.reload();
+}
+
+/* =====================================================================
+   SỰ KIỆN
+   ===================================================================== */
+document.addEventListener('click', e=>{
+  const opt = e.target.closest('.opt');
+  if(opt && !opt.disabled){
+    const n = +opt.dataset.q, v = opt.dataset.v;
+    setAnswer(n, ans(n)===v ? '' : v);
+    return;
+  }
+  const tab = e.target.closest('.tab');
+  if(tab){ showTab(tab.dataset.tab); return; }
+  const go = e.target.closest('[data-go]');
+  if(go){ showTab(go.dataset.go); return; }
+  const nv = e.target.closest('.nv');
+  if(nv){ const el = document.getElementById('q-'+nv.dataset.n); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); return; }
+  if(e.target.closest('[data-action="submit"]')){ submit(); return; }
+});
+document.addEventListener('input', e=>{
+  const t = e.target;
+  if(t.matches('input.hz, textarea.wt')) setAnswer(+t.dataset.q, t.value);
+});
+$('#cand-name').addEventListener('input', e=>{ if(state.submitted) return; state.name = e.target.value; save(); });
+$('#btn-submit').addEventListener('click', submit);
+$('#btn-review').addEventListener('click', ()=>showTab('listening'));
+$('#btn-print').addEventListener('click', ()=>window.print());
+$('#btn-pdf').addEventListener('click', downloadPDF);
+$('#btn-new').addEventListener('click', newExam);
+
+/* =====================================================================
+   KHỞI ĐỘNG
+   ===================================================================== */
+load();
+renderListening(); renderReading(); renderWriting(); renderNavi();
+$('#cand-name').value = state.name || '';
+$$('input.hz, textarea.wt').forEach(el=>{ el.value = state.answers[el.dataset.q] || ''; });
+range(1,70).forEach(refreshQ);
+updateCounts();
+if(state.submitted) applyLock();
+const startHash = (location.hash||'').slice(1);
+if(state.submitted && (startHash==='ketqua' || !SECS[startHash])) showResult();
+else showTab(SECS[startHash] ? startHash : 'listening');
+})();
+</script>
+</body>
+</html>
